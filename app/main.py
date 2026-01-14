@@ -25,17 +25,13 @@ async def lifespan(app: FastAPI):
     await close_db_connection()
 
 
-app = FastAPI(title=settings.app_name, lifespan=lifespan)
+app = FastAPI(title=settings.app_name, lifespan=lifespan, root_path="/api/v1")
 
 
-app.include_router(auth_router.router, prefix=settings.api_v1_prefix, tags=["auth"])
-app.include_router(users_router.router, prefix=settings.api_v1_prefix, tags=["users"])
-app.include_router(
-    product_router.router, prefix=settings.api_v1_prefix, tags=["products"]
-)
-app.include_router(
-    review_router.router, prefix=settings.api_v1_prefix, tags=["reviews"]
-)
+app.include_router(auth_router.router, tags=["auth"])
+app.include_router(users_router.router, tags=["users"])
+app.include_router(product_router.router, tags=["products"])
+app.include_router(review_router.router, tags=["reviews"])
 
 app.add_middleware(
     CORSMiddleware,
